@@ -10,5 +10,5 @@ module.exports = function(app) {
 		.get(core.mysqltest);
 	//utization sever route
 	app.route('/utilization_1')
-		.get(core.mysqltest);	
+		.get(core.utilization_1);	
 };

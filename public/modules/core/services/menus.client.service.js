@@ -173,3 +173,12 @@ angular.module('core').factory('mysqltest', ['$resource',
 		);
 	}
 ]);
+
+angular.module('core').factory('utilization_1', ['$resource',
+	function($resource) {
+		return $resource('utilization_1'
+		);
+	}
+])
+
+;

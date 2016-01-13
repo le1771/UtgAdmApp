@@ -11,10 +11,10 @@ var mongoose = require('mongoose'),
 var mysql      = require('mysql');
 var bodyParser = require('body-parser');
 var connection = mysql.createConnection({
-  host     : 'localhost',
+  host     : 'ec2-54-84-46-213.compute-1.amazonaws.com',
   user     : 'mysqluser',
   password : '123456y',
-  database : 'testadm'
+  database : 'utgadm'
 });
 connection.connect();
 
@@ -42,5 +42,18 @@ exports.mysqltest = function (req, res){
  	  } else
  	    console.log('Error while performing Query.');
  	  });
+
+exports.utilization_1 = function (req, res){
+  var rows;
+
+ 	connection.query('SELECT * from V_VALID_40HRS LIMIT 10', function(err, rows, fields) {
+ 	  if (!err) {
+ 	    console.log('SELECT * from V_VALID_40HRS');
+ 	    console.log('The sql query result is: ', rows);
+ 	    res.jsonp(rows);
+ 	  } else
+ 	    console.log('Error while performing Query.');
+ 	  });
+
 
  };
