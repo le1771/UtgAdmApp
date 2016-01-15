@@ -11,10 +11,10 @@ var mongoose = require('mongoose'),
 var mysql      = require('mysql');
 var bodyParser = require('body-parser');
 var connection = mysql.createConnection({
-  host     : 'ec2-54-84-46-213.compute-1.amazonaws.com ',
+  host     : 'ec2-54-84-46-213.compute-1.amazonaws.com',
   user     : 'mysqluser',
   password : '123456y',
-  database : 'utgadm1'
+  database : 'utgadm'
 });
 connection.connect();
 
@@ -34,7 +34,7 @@ exports.index = function(req, res) {
 exports.mysqltest = function (req, res){
   var rows;
 
- 	connection.query('SELECT * from players LIMIT 10', function(err, rows, fields) {
+ 	connection.query('SELECT * from testadm.players LIMIT 10', function(err, rows, fields) {
  	  if (!err) {
  	    console.log('Select from players table');
  	    console.log('The sql query result is: ', rows);
@@ -48,7 +48,7 @@ exports.mysqltest = function (req, res){
 exports.utilization = function (req, res){
   var rows;
 
- 	connection.query('SELECT * from TBL_BT_TIMESHEET_DETAIL', function(err, rows, fields) {
+ 	connection.query('SELECT PRACTICE,TITLE,STAFF_MEMBER,BILLABLE_UTILIZATION,PRD_DEV_UTILIZATION,TOTAL_UTILIZATION FROM V_WEEKLY_UTILIZATION WHERE STAFF_MEMBER is not null LIMIT 10', function(err, rows, fields) {
  	  if (!err) {
  	    console.log('Select from Utilization table');
  	    console.log('The sql query result is: ', rows);
