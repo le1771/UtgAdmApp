@@ -14,7 +14,7 @@ var connection = mysql.createConnection({
   host     : 'ec2-54-84-46-213.compute-1.amazonaws.com ',
   user     : 'mysqluser',
   password : '123456y',
-  database : 'utgadm'
+  database : 'utgadm1'
 });
 connection.connect();
 
