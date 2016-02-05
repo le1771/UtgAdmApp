@@ -8,5 +8,9 @@ module.exports = function(app) {
 	//test server route
 	app.route('/mysqltest')
 		.get(core.mysqltest);
+    
+    //Utilization Sql Data
+    app.route('/utilization')
+		.get(core.utilization);
 
 };
