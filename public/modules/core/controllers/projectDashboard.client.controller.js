@@ -1,28 +1,103 @@
 'use strict';
 
 
-angular.module('core').controller('ProjectController', ['$scope', 'Authentication',
-	function($scope, Authentication) {
+angular.module('core').controller('ProjectController', ['$scope','$http', 'Authentication','getRequest', 'postRequest',
+	function($scope,$http, Authentication, getRequest, postRequest) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
 
         // Some example string
         $scope.helloText = 'Project Dashboard';
         $scope.descriptionText = 'Project Dashboards';
+        /*$scope.filter=[];
+        $scope.filter.Name=[];
+	    $scope.filter.Name.PROJECT="CENTERPOINT:SAP CORE SUPPORT";*/
         
-      /*  $('#datetimepicker6').datetimepicker();
-        $('#datetimepicker7').datetimepicker({
-            useCurrent: false //Important! See issue #1075
-        });
-        $("#datetimepicker6").on("dp.change", function (e) {
-            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-        });
-        $("#datetimepicker7").on("dp.change", function (e) {
-            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-        });*/
+        $scope.onStart= function(){
+      
+        console.log('Getting Data for Project Filter');
+        $scope.Projects = getRequest.projects.query();
+             
+        console.log("Getting Data for Resources KPI's");
+        $scope.Resources = getRequest.resources.query();
+      
+        console.log('Getting Data for over Utilized resources');
+        $scope.overUtil = getRequest.overutil.query();
         
-        // Options for Bar Chart
-        var barOptions = {
+        console.log('Getting Data for Project Table');
+        $scope.proTable = getRequest.protable.query();    
+            
+        console.log('Getting Data for Progress');
+        $scope.progress = getRequest.progress.query();    
+        console.log($scope.progress); 
+        
+        console.log('Getting Data for Graphs');
+        $scope.graph = getRequest.graph.query();    
+        console.log($scope.graph);  
+          
+        };
+        $scope.onStart();
+         
+        $scope.onChange= function(){
+        console.log($scope.filter); 
+        console.log("Filtering for Resources KPI's");
+        $scope.Resources = postRequest.resources.query({filter:$scope.filter});
+        $scope.overUtil = postRequest.overutil.query({filter:$scope.filter});    
+        $scope.proTable = postRequest.protable.query({filter:$scope.filter});      
+        $scope.progress = postRequest.progress.query({filter:$scope.filter}); 
+        };
+        
+         /*var len = $scope.graph
+          var len1 =len.length;
+          $scope.l = len1;
+          var arr = [];
+          var arr1 =[];
+          for(var i = 0; i < $scope.graph.length; i++) 
+          {
+              var obj = $scope.graph[i];
+              arr.push(obj.BILLABLE_HOURS);  
+              //arr1.push(obj.Progress);
+              
+          }
+          console.log(arr)*/
+    var doughnutData = [
+        {
+            value: 300,
+            color:"#a3e1d4",
+            highlight: "#1ab394",
+            label: "App"
+        },
+        {
+            value: 50,
+            color: "#dedede",
+            highlight: "#1ab394",
+            label: "Software"
+        },
+        {
+            value: 100,
+            color: "#A4CEE8",
+            highlight: "#1ab394",
+            label: "Laptop"
+        }
+    ];
+
+    /**
+     * Options for Doughnut chart
+     */
+    var doughnutOptions = {
+        segmentShowStroke : true,
+        segmentStrokeColor : "#fff",
+        segmentStrokeWidth : 2,
+        percentageInnerCutout : 45, // This is 0 for Pie charts
+        animationSteps : 100,
+        animationEasing : "easeOutBounce",
+        animateRotate : true,
+        animateScale : false
+    };
+    /*var dough = document.getElementById("myDougnut").getContext("2d");    
+    var doughnutChart = new Chart(dough).Doughnut(doughnutData, doughnutOptions);  */
+        
+   var barOptions = {
         scaleBeginAtZero : true,
         scaleShowGridLines : true,
         scaleGridLineColor : "rgba(0,0,0,.05)",
@@ -31,8 +106,8 @@ angular.module('core').controller('ProjectController', ['$scope', 'Authenticatio
         barStrokeWidth : 2,
         barValueSpacing : 5,
         barDatasetSpacing : 1
-};
-
+    }
+     
     /**
      * Data for Bar chart
      */
@@ -57,8 +132,8 @@ angular.module('core').controller('ProjectController', ['$scope', 'Authenticatio
             }
         ]
     };    
-    var bar = document.getElementById("myBarChart").getContext("2d");    
-    var myBarChart = new Chart(bar).Bar(barData, barOptions);  
+   /* var bar = document.getElementById("myBarChart").getContext("2d");    
+    var myBarChart = new Chart(bar).Bar(barData, barOptions);  */
     
     var d1 = [[1262304000000, 6], [1264982400000, 3057], [1267401600000, 20434], [1270080000000, 31982], [1272672000000, 26602], [1275350400000, 27826], [1277942400000, 24302], [1280620800000, 24237], [1283299200000, 21004], [1285891200000, 12144], [1288569600000, 10577], [1291161600000, 10295]];
     var d2 = [[1262304000000, 5], [1264982400000, 200], [1267401600000, 1605], [1270080000000, 6129], [1272672000000, 11643], [1275350400000, 19055], [1277942400000, 30062], [1280620800000, 39197], [1283299200000, 37000], [1285891200000, 27000], [1288569600000, 21000], [1291161600000, 17000]];
@@ -237,8 +312,280 @@ angular.module('core').controller('ProjectController', ['$scope', 'Authenticatio
             defaultTheme: false
         }
     };
-    
-    
+    //Data for Select
+      
+     
+/*        $scope.onProjectSelect= function(){
+            console.log($scope.filter.Name.PROJECT);
+        }
+        $scope.myChangeFunction= function(){
+            console.log($scope.example.value1);
+            console.log($scope.example.value2);
+        }
+        $scope.startDate = "Start Date";
+        */
+    //Flot Charts    
+    var data1 = [
+        [gd(2012, 1, 1), 7],
+        [gd(2012, 1, 2), 6],
+        [gd(2012, 1, 3), 4],
+        [gd(2012, 1, 4), 8],
+        [gd(2012, 1, 5), 9],
+        [gd(2012, 1, 6), 7],
+        [gd(2012, 1, 7), 5],
+        [gd(2012, 1, 8), 4],
+        [gd(2012, 1, 9), 7],
+        [gd(2012, 1, 10), 8],
+        [gd(2012, 1, 11), 9],
+        [gd(2012, 1, 12), 6],
+        [gd(2012, 1, 13), 4],
+        [gd(2012, 1, 14), 5],
+        [gd(2012, 1, 15), 11],
+        [gd(2012, 1, 16), 8],
+        [gd(2012, 1, 17), 8],
+        [gd(2012, 1, 18), 11],
+        [gd(2012, 1, 19), 11],
+        [gd(2012, 1, 20), 6],
+        [gd(2012, 1, 21), 6],
+        [gd(2012, 1, 22), 8],
+        [gd(2012, 1, 23), 11],
+        [gd(2012, 1, 24), 13],
+        [gd(2012, 1, 25), 7],
+        [gd(2012, 1, 26), 9],
+        [gd(2012, 1, 27), 9],
+        [gd(2012, 1, 28), 8],
+        [gd(2012, 1, 29), 5],
+        [gd(2012, 1, 30), 8],
+        [gd(2012, 1, 31), 25]
+    ];
+
+    var data2 = [
+        [gd(2012, 1, 1), 800],
+        [gd(2012, 1, 2), 500],
+        [gd(2012, 1, 3), 600],
+        [gd(2012, 1, 4), 700],
+        [gd(2012, 1, 5), 500],
+        [gd(2012, 1, 6), 456],
+        [gd(2012, 1, 7), 800],
+        [gd(2012, 1, 8), 589],
+        [gd(2012, 1, 9), 467],
+        [gd(2012, 1, 10), 876],
+        [gd(2012, 1, 11), 689],
+        [gd(2012, 1, 12), 700],
+        [gd(2012, 1, 13), 500],
+        [gd(2012, 1, 14), 600],
+        [gd(2012, 1, 15), 700],
+        [gd(2012, 1, 16), 786],
+        [gd(2012, 1, 17), 345],
+        [gd(2012, 1, 18), 888],
+        [gd(2012, 1, 19), 888],
+        [gd(2012, 1, 20), 888],
+        [gd(2012, 1, 21), 987],
+        [gd(2012, 1, 22), 444],
+        [gd(2012, 1, 23), 999],
+        [gd(2012, 1, 24), 567],
+        [gd(2012, 1, 25), 786],
+        [gd(2012, 1, 26), 666],
+        [gd(2012, 1, 27), 888],
+        [gd(2012, 1, 28), 900],
+        [gd(2012, 1, 29), 178],
+        [gd(2012, 1, 30), 555],
+        [gd(2012, 1, 31), 993]
+    ];
+
+
+    var dataset = [
+        {
+            label: "Number of orders",
+            grow:{stepMode:"linear"},
+            data: data2,
+            color: "#1ab394",
+            bars: {
+                show: true,
+                align: "center",
+                barWidth: 24 * 60 * 60 * 600,
+                lineWidth: 0
+            }
+
+        },
+        {
+            label: "Payments",
+            grow:{stepMode:"linear"},
+            data: data1,
+            yaxis: 2,
+            color: "#1C84C6",
+            lines: {
+                lineWidth: 1,
+                show: true,
+                fill: true,
+                fillColor: {
+                    colors: [
+                        {
+                            opacity: 0.2
+                        },
+                        {
+                            opacity: 0.2
+                        }
+                    ]
+                }
+            }
+        }
+    ];
+
+
+    var options = {
+        grid: {
+            hoverable: true,
+            clickable: true,
+            tickColor: "#d5d5d5",
+            borderWidth: 0,
+            color: '#d5d5d5'
+        },
+        colors: ["#1ab394", "#464f88"],
+        tooltip: true,
+        xaxis: {
+            //mode: "time",
+            tickSize: [3, "day"],
+            tickLength: 0,
+            axisLabel: "Date",
+            axisLabelUseCanvas: true,
+            axisLabelFontSizePixels: 12,
+            axisLabelFontFamily: 'Arial',
+            axisLabelPadding: 10,
+            color: "#d5d5d5"
+        },
+        yaxes: [
+            {
+                position: "left",
+                max: 1070,
+                color: "#d5d5d5",
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Arial',
+                axisLabelPadding: 3
+            },
+            {
+                position: "right",
+                color: "#d5d5d5",
+                axisLabelUseCanvas: true,
+                axisLabelFontSizePixels: 12,
+                axisLabelFontFamily: 'Arial',
+                axisLabelPadding: 67
+            }
+        ],
+        legend: {
+            noColumns: 1,
+            labelBoxBorderColor: "#d5d5d5",
+            position: "nw"
+        }
+
+    };
+
+    function gd(year, month, day) {
+        return new Date(year, month - 1, day);
+    }
+     var lineOptions = {
+        series: {
+            lines: {
+                show: true,
+                lineWidth: 2,
+                fill: true,
+                fillColor: {
+                    colors: [
+                        {
+                            opacity: 0.0
+                        },
+                        {
+                            opacity: 0.0
+                        }
+                    ]
+                }
+            }
+        },
+        xaxis: {
+            tickDecimals: 0
+        },
+        colors: ["#1ab394"],
+        grid: {
+            color: "#999999",
+            hoverable: true,
+            clickable: true,
+            tickColor: "#D4D4D4",
+            borderWidth: 0
+        },
+        legend: {
+            show: false
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "x: %x, y: %y"
+        }
+    };    
+
+    /**
+     * Definition of variables
+     * Flot chart
+     */
         
-	}
+    $scope.flotData = dataset;
+    $scope.flotBarOptions = options;
+    $scope.flotLineOptions = lineOptions;    
+
+            var barOptions = {
+        series: {
+            bars: {
+                show: true,
+                barWidth: 0.6,
+                fill: true,
+                fillColor: {
+                    colors: [
+                        {
+                            opacity: 0.8
+                        },
+                        {
+                            opacity: 0.8
+                        }
+                    ]
+                }
+            }
+        },
+        xaxis: {
+            tickDecimals: 0
+        },
+        colors: ["#1ab394"],
+        grid: {
+            color: "#999999",
+            hoverable: true,
+            clickable: true,
+            tickColor: "#D4D4D4",
+            borderWidth: 0
+        },
+        legend: {
+            show: true
+        },
+        tooltip: true,
+        tooltipOpts: {
+            content: "x: %x, y: %y"
+        }
+    };
+
+    var chartData = [
+        {
+            label: "bar",
+            data: [
+                [1, 34],
+                [2, 25],
+                [3, 19],
+                [4, 34],
+                [5, 32],
+                [6, 44]
+            ]
+        }
+    ];
+        
+$scope.flotBarOptions1 = barOptions;
+$scope.flotChartData1 = chartData;
+        
+}
+ 
 ]);
